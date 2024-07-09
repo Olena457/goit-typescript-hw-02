@@ -3,13 +3,18 @@ import { useState } from 'react';
 import { useId } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import css from './SearchBar.module.css';
+import React from 'react';
 
-export const SearchBar = ({ submit }) => {
+interface SearchBarProps {
+  submit: (query: string) => void;
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({ submit }) => {
   const [query, setQuery] = useState('');
 
   const searchQueryId = 'searchQueryId' + useId();
 
-  const handleSubmit = ev => {
+  const handleSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
     if (query.trim() !== '') {
       submit(query);
@@ -41,7 +46,7 @@ export const SearchBar = ({ submit }) => {
             Search
           </button>
           <FaSearch
-            onClick={handleSubmit}
+            // onClick={handleSubmit}
             className={`${css.icon} ${css.searchIcon}`}
           />
 

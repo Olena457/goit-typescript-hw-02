@@ -1,6 +1,18 @@
 import css from './ImageCard.module.css';
+interface Image {
+  id: string;
+  urls: {
+    small: string;
+  };
+  slug: string;
+}
 
-const ImageCard = ({ image, onClick }) => {
+interface ImageCardProps {
+  image: Image;
+  onClick: (image: Image) => void;
+}
+
+const ImageCard: React.FC<ImageCardProps> = ({ image, onClick }) => {
   return (
     <div>
       {/* <img src={image.webformatURL} alt={image.tags} /> */}
