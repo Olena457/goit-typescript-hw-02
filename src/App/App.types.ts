@@ -1,16 +1,8 @@
-// export interface UnsplashPhoto {
-//   id: string;
-//   description: string | null;
-//   urls: {
-//     regular: string;
-//   };
-// }
-export interface ErrorMessageProps {
-  message: string;
-}
 export interface UnsplashPhoto {
   id: string;
-  description: string | null;
+  alt_description: string;
+  description?: string | null;
+  likes: number;
   urls: {
     regular: string;
     small: string;
@@ -18,6 +10,4 @@ export interface UnsplashPhoto {
   user: {
     name: string;
   };
-  likes: number;
-  slug?: string;
 }

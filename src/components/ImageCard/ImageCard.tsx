@@ -1,31 +1,25 @@
+import { FC } from 'react';
 import css from './ImageCard.module.css';
-interface Image {
-  id: string;
-  urls: {
-    small: string;
-  };
-  slug: string;
-}
+import { UnsplashPhoto } from '../../App/App.types';
 
 interface ImageCardProps {
-  image: Image;
-  onClick: (image: Image) => void;
+  item: UnsplashPhoto;
+  onClick: (item: UnsplashPhoto) => void;
 }
 
-const ImageCard: React.FC<ImageCardProps> = ({ image, onClick }) => {
+export const ImageCard: FC<ImageCardProps> = ({ item, onClick }) => {
+  const { urls, alt_description } = item;
+  const handlerClick = () => {
+    onClick(item);
+  };
   return (
     <div>
-      {/* <img src={image.webformatURL} alt={image.tags} /> */}
       <img
         className={css.itemImg}
-        src={image.urls.small}
-        alt={image.slug}
-        key={image.id}
-        onClick={() => onClick(image)}
+        src={urls.small}
+        alt={alt_description}
+        onClick={handlerClick}
       />
-      {/* <p>{image.description}</p> */}
     </div>
   );
 };
-
-export default ImageCard;

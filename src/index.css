@@ -27,7 +27,14 @@ body {
   display: flex;
   place-items: center;
   font-style: normal;
-  /* min-width: 320px; */
+  min-height: 100vh;
+  background-image: url('./assets/pixabay-314726.jpg');
+  background-position: center center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  place-items: center;
+  width: 100%;
   min-height: 100vh;
 }
 
@@ -42,12 +49,12 @@ p {
 }
 p {
   font-weight: 500;
-  color: #008000;
+  color: #5f9bb6;
 }
 ul,
 ol {
   list-style: none;
-  /* padding-left: 0; */
+
   padding: 0;
   margin: 0;
 }
@@ -91,7 +98,7 @@ button:focus-visible {
     background-color: #ffffff;
   }
   a:hover {
-    color: #008000;
+    color: #5f9bb6;
   }
   button {
     background-color: #f9f9f9;

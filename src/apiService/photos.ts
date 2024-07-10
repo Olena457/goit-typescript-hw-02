@@ -1,41 +1,22 @@
-import axios, { AxiosResponse } from 'axios';
-import { UnsplashPhoto } from '../App/App.types';
+import axios from 'axios';
 
-interface UnsplashResponse {
-  results: UnsplashPhoto[];
-  total_pages: number;
-}
+import { ResProps } from '../apiService/photos.type';
 
-export const fetchUnsplash = async ({
-  query,
-  page,
-  per_page = 12,
-}: {
-  query: string;
-  page: number;
-  per_page?: number | undefined;
-}): Promise<AxiosResponse<UnsplashResponse>> => {
-  const accessKey = '8_8sodKPxiolFkYrfqUjMUwizh86FyVeWy_c_fADcCw';
-  axios.defaults.baseURL = 'https://api.unsplash.com';
-  axios.defaults.headers.common['Authorization'] = `Client-ID ${accessKey}`;
+axios.defaults.baseURL = 'https://api.unsplash.com';
 
-  try {
-    const response = await axios.get<UnsplashResponse>('/search/photos', {
-      params: {
-        asset_type: 'photo',
-        orientation: 'landscape',
-        query,
-        page,
-        per_page,
-      },
-      headers: {
-        'Accept-Version': 'v1',
-      },
-    });
+export const fetchUnsplash = async (
+  item: string,
+  currentPage: number
+): Promise<ResProps> => {
+  const res = await axios.get<ResProps>('/search/photos', {
+    params: {
+      orientation: 'landscape',
+      query: item,
+      page: currentPage,
+      per_page: 15,
+      client_id: '8_8sodKPxiolFkYrfqUjMUwizh86FyVeWy_c_fADcCw',
+    },
+  });
 
-    return response;
-  } catch (error) {
-    console.error('Error fetching Unsplash data:', error);
-    throw error;
-  }
+  return res.data;
 };

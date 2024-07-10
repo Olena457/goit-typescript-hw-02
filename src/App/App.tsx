@@ -1,99 +1,82 @@
 import { useState, useEffect } from 'react';
-import './App.css';
-import css from './../components/ImageModal/ImageModal.module.css';
-import Loader from './../components/Loader/Loader';
+import { Loader } from './../components/Loader/Loader';
 import { fetchUnsplash } from './../apiService/photos';
+import { UnsplashPhoto } from './App.types';
+import './App.css';
 import ImageModal from './../components/ImageModal/ImageModal';
 import LoadMoreBtn from './../components/LoadMoreBtn/LoadMoreBtn';
 import ErrorMessage from './../components/ErrorMessage/ErrorMessage';
 import SearchBar from './../components/SearchBar/SearchBar';
 import ImageGallery from './../components/ImageGallery/ImageGallery';
-import { UnsplashPhoto } from './App.types';
-// import { KnownAsTypeMap } from 'vite';
 
-function App() {
+export default function App() {
+  const [photo, setUnsplashPhoto] = useState<UnsplashPhoto[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
-  const [query, setQuery] = useState<string>('');
-  const [images, setImages] = useState<UnsplashPhoto[]>([]);
-  const [modalImage, setModalImage] = useState<string | null>(null);
-  const [hasMore, setHasMore] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleSearch = async (searchQuery: string) => {
-    setQuery(searchQuery);
-    setError(null);
-    setImages([]);
-    setPage(1);
-  };
-
-  const handleImageModal = (image: UnsplashPhoto) => {
-    setModalImage(image.urls.regular);
-  };
-
-  const loadMore = () => {
-    setPage(prevPage => prevPage + 1);
-  };
-
-  const openModal = (image: string) => {
-    setModalImage(image);
-  };
-
-  const closeModal = () => {
-    setModalImage(null);
-  };
-
-  const itemsPerPage: number = 12;
-
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  const [selectedImage, setSelectedImage] = useState<UnsplashPhoto | null>(
+    null
+  );
+  const [totalPage, setTotalPage] = useState<number>(0);
   useEffect(() => {
-    if (!query) return;
-    async function getImages() {
+    if (searchQuery.trim() === '') {
+      setIsError(true);
+      return;
+    }
+    async function fetchArticles() {
       try {
-        setLoading(true);
-        const response = await fetchUnsplash({
-          query,
-          page,
-          per_page: itemsPerPage, // Corrected property name
-        });
-        const fetchedImages: UnsplashPhoto[] = response.data.results;
-        setImages(prevImages => [...prevImages, ...fetchedImages]);
-        setHasMore(response.data.total_pages > page);
+        setIsLoading(true);
+        setIsError(false);
+        const data = await fetchUnsplash(searchQuery, page);
+        setTotalPage(data.total_pages);
+        setUnsplashPhoto(prevState => [...prevState, ...data.results]);
       } catch (error) {
-        let errorMessage = 'Sorry, but nothing was found for your request';
-        if (error instanceof Error) {
-          errorMessage = error.message;
-        }
-        console.log(errorMessage);
+        setIsError(true);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     }
-    getImages();
-  }, [query, page]);
+    fetchArticles();
+  }, [searchQuery, page]);
+
+  const handleSearch = async (item: string) => {
+    setSearchQuery(item);
+    setPage(1);
+    setUnsplashPhoto([]);
+  };
+
+  const handleLoadMore = () => {
+    setPage(page + 1);
+  };
+  const openModal = (item: UnsplashPhoto) => {
+    setSelectedImage(item);
+    setModalIsOpen(true);
+  };
+
+  function CloseModal(): void {
+    setModalIsOpen(false);
+    setSelectedImage(null);
+  }
 
   return (
     <>
-      <SearchBar submit={handleSearch} />
-      {error && <ErrorMessage message={error} />}
-      <ImageGallery images={images} onClick={openModal} />
-      {loading && <Loader />}
-      {loading && <p>Loading data, please wait...</p>}
-      {hasMore && !loading && <LoadMoreBtn onClick={loadMore} />}
-      {error && (
-        <p>Whoops, something went wrong! Please try reloading this page!</p>
-      )}
+      <SearchBar onSearch={handleSearch} />
+      {isError && <ErrorMessage />}
+      {isLoading && <Loader />}
+      {photo.length > 0 && <ImageGallery onClick={openModal} items={photo} />}
 
-      {modalImage && (
+      {selectedImage && (
         <ImageModal
-          className={css.modalImg}
-          onSelect={handleImageModal}
-          isOpen={!!modalImage}
-          onRequestClose={closeModal}
-          image={modalImage}
+          item={selectedImage}
+          onClose={CloseModal}
+          isOpen={modalIsOpen}
         />
+      )}
+      {photo.length > 0 && !isLoading && page < totalPage && (
+        <LoadMoreBtn onClick={handleLoadMore} />
       )}
     </>
   );
 }
-
-export default App;

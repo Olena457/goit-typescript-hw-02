@@ -1,33 +1,18 @@
-import { nanoid } from 'nanoid';
-
+// import { nanoid } from 'nanoid';
+import { FC } from 'react';
 import css from './ImageGallery.module.css';
-import ImageCard from '../ImageCard/ImageCard';
+import { ImageCard } from '../ImageCard/ImageCard';
 import { UnsplashPhoto } from '../../App/App.types';
-interface Image {
-  id: string;
-  urls: {
-    small: string;
-  };
-  slug: string;
+
+export interface ImageGalleryProps {
+  items: UnsplashPhoto[];
+  onClick: (items: UnsplashPhoto) => void;
 }
-
-interface ImageGalleryProps {
-  images: Image[];
-  onClick: () => void;
-}
-
-const ImageGallery: React.FC<ImageGalleryProps> = ({ images, onClick }) => {
-  const transformedImages = images.map(image => ({
-    ...image,
-    urls: {
-      small: image.urls.small,
-    },
-  }));
-
+const ImageGallery: FC<ImageGalleryProps> = ({ items, onClick }) => {
   return (
     <ul className={css.galleryList}>
-      {transformedImages.map(image => (
-        <ImageCard key={nanoid()} image={image} onClick={onClick} />
+      {items.map(item => (
+        <ImageCard key={item.id} item={item} onClick={onClick} />
       ))}
     </ul>
   );

@@ -1,10 +1,22 @@
 .header {
   width: 100%;
   display: flex;
+  align-items: baseline;
   justify-content: center;
-  background-color: #008000;
+  background-color: #0977a9;
   margin-bottom: 12px;
-  padding: 8px;
+  padding: 10px;
+  border-radius: 4px;
+}
+.container {
+  display: flex;
+}
+.title {
+  font-style: italic;
+  font-size: xx-large;
+  padding-right: 50px;
+  color: black;
+  text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.8); /* Біла тінь */
 }
 .formSearch {
   display: flex;
@@ -18,18 +30,46 @@
   position: relative;
   width: 100%;
   margin: 0 auto;
-  /* width: 300px; */
 }
 
-/* .searchInput {
+.input {
+  position: relative;
+  width: 400px;
+  margin: 0 auto;
+  border-radius: 2px;
+  background-color: #fffae6;
+  outline: 0;
+  border: 2px solid rgba(54, 64, 75, 0.989);
+  border-radius: 2px;
+  font-size: 15px;
+  padding-left: 30px;
+
+  transition: width 0.5s ease;
+  cursor: pointer;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.3);
+}
+
+.input::placeholder {
+  color: #002379;
+  opacity: 0;
+}
+
+.active .input {
+  border-color: #055072;
+}
+
+.active .input::placeholder {
+  opacity: 1;
+}
+
+.searchInput {
   width: 100%;
   padding: 10px 10px 10px 30px;
   box-sizing: border-box;
 }
 
-*/
-
 .icon {
+  left: 10px;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -40,31 +80,36 @@
 .searchIcon {
   left: 10px;
 }
-.search-icon:hover {
-  color: gray;
-}
-
-.clearIcon {
-  right: 10px;
-}
-.clearIcon:hover {
-  color: #000;
-}
 
 .btn {
+  padding: 12px 25px;
+  border: none;
+  gap: 10px;
   position: absolute;
-  background-color: transparent;
-  right: 10px;
+  margin-left: 15px;
+  background-color: black;
   top: 50%;
   transform: translateY(-50%);
-  cursor: pointer;
   margin-right: 30px;
+  outline: 1px solid transparent;
+  font-size: 16px;
+  font-weight: 500;
+  text-transform: uppercase;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #141010;
+  color: whitesmoke;
+  box-shadow: -10px 0 10px -10px rgba(0, 0, 0, 0.5),
+    10px 0 10px -10px rgba(0, 0, 0, 0.5), 0 10px 10px -10px rgba(0, 0, 0, 0.5);
+
+  transition: background-color 300ms ease-in-out, transform 300ms ease-in-out;
 }
-.btn:hover {
-  border: 1px solid #008000;
-}
-.btn:focus,
-.btn:focus-visible {
-  border-color: transparent;
-  outline: 1px solid #888;
+
+.btn:hover,
+.btn:focus {
+  font-size: 15px;
+  font-weight: 500;
+  background-color: #5f9bb6;
+  color: black;
+  border: 2px solid #141010;
 }

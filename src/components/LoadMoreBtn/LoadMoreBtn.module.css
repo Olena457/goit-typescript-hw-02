@@ -4,23 +4,22 @@
   font-size: 16px;
   justify-content: center;
   align-items: center;
-  color: #fff;
+  color: white;
   gap: 10px;
   width: 125px;
   height: 40px;
   margin-top: 32px;
   margin-bottom: 44px;
-  /* margin-left: 50%; */
   transform: translate(-50%);
   border-radius: 8px;
   border: 1px solid transparent;
-  background: #008000;
+  background: black;
   cursor: pointer;
   transition: background-color 300ms ease-in-out, transform 300ms ease-in-out;
 }
 .loadMore:hover,
 .load-More:focus {
-  background: #008000;
-  color: #fff;
+  background: #5f9bb6;
+  color: black;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }

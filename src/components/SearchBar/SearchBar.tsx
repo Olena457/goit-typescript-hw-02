@@ -1,65 +1,59 @@
-import { FaSearch, FaTimes } from 'react-icons/fa';
-import { useState } from 'react';
-import { useId } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+import { FaSearch } from 'react-icons/fa';
+import { Field, Formik, Form } from 'formik';
+import toast from 'react-hot-toast';
 import css from './SearchBar.module.css';
-import React from 'react';
+import { FC, useState } from 'react';
 
 interface SearchBarProps {
-  submit: (query: string) => void;
+  onSearch: (value: string) => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ submit }) => {
-  const [query, setQuery] = useState('');
+const SearchBar: FC<SearchBarProps> = ({ onSearch }) => {
+  const [isActive, setIsActive] = useState<boolean>(false);
 
-  const searchQueryId = 'searchQueryId' + useId();
-
-  const handleSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
-    ev.preventDefault();
-    if (query.trim() !== '') {
-      submit(query);
-      setQuery('');
-    } else {
-      toast.error('Please enter a search query');
-    }
+  const handleInputClick = (): void => {
+    setIsActive(true);
   };
 
-  const handleClear = () => {
-    setQuery('');
-  };
+  const notify = () =>
+    toast.error('Error loading.Please enter a search query!');
 
   return (
-    <header className={css.header}>
-      <form onSubmit={handleSubmit} className={css.formSearch}>
-        <div className={css.searchCont}>
-          <input
-            type="text"
-            name="query"
-            value={query}
-            id={searchQueryId}
-            autoComplete="off"
-            onChange={e => setQuery(e.target.value)}
-            placeholder="Search images and photos"
-            autoFocus
-          />
-          <button className={css.btn} type="submit">
-            Search
-          </button>
-          <FaSearch
-            // onClick={handleSubmit}
-            className={`${css.icon} ${css.searchIcon}`}
-          />
+    <>
+      <header className={css.header}>
+        <h1 className={css.title}>Only the best photo</h1>
+        <Formik
+          initialValues={{ query: '' }}
+          onSubmit={(values, actions) => {
+            if (!values.query.trim()) {
+              notify();
+            }
+            onSearch(values.query);
+            actions.resetForm();
+            setIsActive(false);
+          }}
+        >
+          <Form>
+            <div className={`${css.searchCont} ${isActive ? css.active : ''}`}>
+              <Field
+                className={css.input}
+                type="text"
+                name="query"
+                autoComplete="off"
+                autoFocus
+                placeholder="Search images"
+                onClick={handleInputClick}
+              />
 
-          {query && (
-            <FaTimes
-              className={`${css.icon} ${css.clearIcon}`}
-              onClick={handleClear}
-            />
-          )}
-        </div>
-      </form>
-      <Toaster />
-    </header>
+              <button className={css.btn} type="submit">
+                Search
+              </button>
+              <FaSearch className={`${css.icon} ${css.searchIcon}`} />
+            </div>
+          </Form>
+        </Formik>
+      </header>
+    </>
   );
 };
 

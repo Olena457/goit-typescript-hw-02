@@ -1,10 +1,17 @@
-import css from './ErrorMessage.module.css';
+import { Toaster } from 'react-hot-toast';
 
-import { ErrorMessageProps } from '../../App/App.types';
-
-const ErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => (
-  <div>
-    <p className={css.error}>{message}</p>
-  </div>
-);
-export default ErrorMessage;
+export default function ErrorMessage() {
+  return (
+    <Toaster
+      position="top-center"
+      reverseOrder={false}
+      toastOptions={{
+        style: {
+          background: 'indianred',
+          color: 'black',
+        },
+        duration: 4000,
+      }}
+    />
+  );
+}
