@@ -8,6 +8,7 @@ import LoadMoreBtn from './../components/LoadMoreBtn/LoadMoreBtn';
 import ErrorMessage from './../components/ErrorMessage/ErrorMessage';
 import SearchBar from './../components/SearchBar/SearchBar';
 import ImageGallery from './../components/ImageGallery/ImageGallery';
+import { ResProps } from './../apiService/photos.type';
 
 export default function App() {
   const [photo, setUnsplashPhoto] = useState<UnsplashPhoto[]>([]);
@@ -20,25 +21,28 @@ export default function App() {
     null
   );
   const [totalPage, setTotalPage] = useState<number>(0);
+
   useEffect(() => {
     if (searchQuery.trim() === '') {
       setIsError(true);
       return;
     }
-    async function fetchArticles() {
+
+    async function fetchData() {
       try {
         setIsLoading(true);
         setIsError(false);
-        const data = await fetchUnsplash(searchQuery, page);
-        setTotalPage(data.total_pages);
+        const data: ResProps = await fetchUnsplash(searchQuery, page);
         setUnsplashPhoto(prevState => [...prevState, ...data.results]);
+        setTotalPage(data.total_pages);
       } catch (error) {
         setIsError(true);
       } finally {
         setIsLoading(false);
       }
     }
-    fetchArticles();
+
+    fetchData();
   }, [searchQuery, page]);
 
   const handleSearch = async (item: string) => {
@@ -50,12 +54,13 @@ export default function App() {
   const handleLoadMore = () => {
     setPage(page + 1);
   };
+
   const openModal = (item: UnsplashPhoto) => {
     setSelectedImage(item);
     setModalIsOpen(true);
   };
 
-  function CloseModal(): void {
+  function closeModal(): void {
     setModalIsOpen(false);
     setSelectedImage(null);
   }
@@ -70,10 +75,11 @@ export default function App() {
       {selectedImage && (
         <ImageModal
           item={selectedImage}
-          onClose={CloseModal}
+          onClose={closeModal}
           isOpen={modalIsOpen}
         />
       )}
+
       {photo.length > 0 && !isLoading && page < totalPage && (
         <LoadMoreBtn onClick={handleLoadMore} />
       )}
